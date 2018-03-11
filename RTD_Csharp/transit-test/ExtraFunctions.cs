@@ -62,9 +62,15 @@ namespace transit_test
                         if (update.stop_sequence.ToString() != null)
                             Console.WriteLine("    Stop Sequence = " + update.stop_sequence.ToString());
                         if (update.arrival != null)
+                        {
+                            Console.WriteLine("    Arrival Time = " + update.arrival.time);
                             Console.WriteLine("    Arrival Time = " + Program.UnixTimeStampToDateTime(update.arrival.time).ToString());
+                        }
                         if (update.departure != null)
+                        {
+                            Console.WriteLine("    Departure Time = " + update.departure.time);
                             Console.WriteLine("    Departure Time = " + Program.UnixTimeStampToDateTime(update.departure.time).ToString());
+                        }
                         if (update.stop_id != null)
                             Console.WriteLine("    Stop ID = " + update.stop_id);
                         Console.WriteLine("    Schedule Relationship  = " + update.schedule_relationship.ToString());
