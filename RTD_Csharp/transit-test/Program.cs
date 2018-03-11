@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using ProtoBuf;
 using transit_realtime;
+using System.Collections.Generic;
 
 namespace transit_test
 {
@@ -11,19 +12,29 @@ namespace transit_test
     {
         static void Main(string[] args)
         {
+            //set urls for RTD data
+            String vehiclePositionUrl = "http://www.rtd-denver.com/google_sync/VehiclePosition.pb";
+            String tripUrl = "http://www.rtd-denver.com/google_sync/TripUpdate.pb";
             //get vehicle positions data from RTD.
-            //Sending 1 gets trip data 
-            //Sending 2 gets vehicle position data
-            FeedMessage feed = getVehiclePositions(1);
-            FeedMessage feed2 = getVehiclePositions(2);
+
+            FeedMessage vehiclePositionFeed = getData(vehiclePositionUrl);
+            FeedMessage tripFeed = getData(tripUrl);
 
             Stop stop_inst = new Stop();
             Trip trip_inst = new Trip();
 
             //print the data from vehicle positions.
-            printAllVehiclePositions(feed2);
-            //printTrips(feed);
+            //printAllVehiclePositions(vehiclePositionFeed);
+            //printTrips(tripFeed);
             //printVP_for_stop(feed2, "23103");
+            //ExtraFunctions.VehiclePosition_ByStop(vehiclePositionFeed, "22730");
+            String stopNumber = "12850";
+            String all = "all";
+            List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
+            ExtraFunctions.PrintTrips_ByStop(tripsForStop, stopNumber);
+
+
+
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
         }//end of main
@@ -89,61 +100,6 @@ namespace transit_test
         }
 
 
-        static void printVP_for_stop(FeedMessage feed, String bus_stop)
-        {
-            foreach (FeedEntity entity in feed.entity)
-            {
-                if (entity.vehicle != null)
-                {
-                    if (entity.vehicle.trip != null)
-                    {
-                        if (entity.vehicle.trip.route_id != null && entity.vehicle.stop_id == bus_stop)
-                        {
-                            Console.WriteLine("Vehicle ID = " + entity.vehicle.vehicle.id);
-                            Console.WriteLine("Current Position Information:");
-                            Console.WriteLine("Current Latitude = " + entity.vehicle.position.latitude);
-                            Console.WriteLine("Current Longitude = " + entity.vehicle.position.longitude);
-                            Console.WriteLine("Current Bearing = " + entity.vehicle.position.bearing);
-                            Console.WriteLine("Current Status = " + entity.vehicle.current_status + " StopID: " + entity.vehicle.stop_id);
-                            if (Stop.stops.ContainsKey(entity.vehicle.stop_id))
-                            {
-                                Console.WriteLine("The name of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_name + "\"");
-                                Console.WriteLine("The Latitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_lat + "\"");
-                                Console.WriteLine("The Longitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_long + "\"");
-                                string wheelChairOK = "IS NOT";
-                                if (Stop.stops[entity.vehicle.stop_id].wheelchair_access)
-                                {
-                                    wheelChairOK = "IS";
-                                }
-                                Console.WriteLine("This stop is " + wheelChairOK + " wheelchair accessible");
-                            }
-
-                            Console.WriteLine("Trip ID = " + entity.vehicle.trip.trip_id);
-                            if (Trip.trips.ContainsKey(entity.vehicle.trip.trip_id))
-                            {
-                                if (entity.vehicle.current_status.ToString() == "IN_TRANSIT_TO")
-                                {
-                                    if (Stop.stops.ContainsKey(entity.vehicle.stop_id))
-                                    {
-                                        Console.WriteLine("Vehicle in transit to: " + Stop.stops[entity.vehicle.stop_id].stop_name);
-                                        Trip.trip_t trip = Trip.trips[entity.vehicle.trip.trip_id];
-                                        foreach (Trip.trip_stops_t stop in trip.tripStops)
-                                        {
-                                            if (stop.stop_id == entity.vehicle.stop_id)
-                                            {
-                                                Console.WriteLine(".. and is scheduled to arrive there at " + stop.arrive_time);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                Console.WriteLine();
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
 
 
@@ -223,18 +179,8 @@ namespace transit_test
         //Get vehicle positions data from RTD
         //
         //-------------------------------------------------------
-        static FeedMessage getVehiclePositions(int choice)
+        static FeedMessage getData(String url)
         {
-            // You have to use one or the other:
-            String url;
-            if (choice == 1)
-            {
-                url = "http://www.rtd-denver.com/google_sync/TripUpdate.pb";
-            }
-            else
-            {
-                url = "http://www.rtd-denver.com/google_sync/VehiclePosition.pb";
-            }
             Uri myUri = new Uri(url);
             WebRequest myWebRequest = HttpWebRequest.Create(myUri);
 
