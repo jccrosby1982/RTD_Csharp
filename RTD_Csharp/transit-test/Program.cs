@@ -31,6 +31,8 @@ namespace transit_test
             String stopNumber = "12850";
             String all = "all";
             List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
+            
+            TimeFunctions.GetAllTimes(tripsForStop,stopNumber);
             ExtraFunctions.PrintTrips_ByStop(tripsForStop, stopNumber);
             Console.WriteLine(ExtraFunctions.getUnixTime());
 
