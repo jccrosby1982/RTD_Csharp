@@ -32,7 +32,7 @@ namespace transit_test
             String all = "all";
             List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
             ExtraFunctions.PrintTrips_ByStop(tripsForStop, stopNumber);
-
+            Console.WriteLine(ExtraFunctions.getUnixTime());
 
 
             Console.WriteLine("Press any key to continue");

@@ -10,6 +10,17 @@ namespace transit_test
 {
     class ExtraFunctions
     {
+        //-------------------------------------------------------------------------------
+        // getUnixTime()
+        // Gets the current Unix time
+        // Precondition: None
+        // Postcondition: Unix time is calculated
+        // Returns: Int32 containing the current Unix time. 
+        //---------------------------------------------------------------------------------
+        public static Int32 getUnixTime()
+        {
+            return (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+        }
         //------------------------------------------------------------------------------
         // StoreTrip_ByStop
         // This gets stores all of the Trip objects for a given bus stop in a list
