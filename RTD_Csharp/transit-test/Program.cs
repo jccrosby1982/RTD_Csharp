@@ -45,7 +45,7 @@ namespace transit_test
 
             List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
             
-            TimeFunctions.GetAllTimes(tripsForStop,stopNumber);
+            //TimeFunctions.GetAllTimes(tripsForStop,stopNumber);
             ExtraFunctions.PrintTrips_ByStop(tripsForStop, stopNumber);
             Console.WriteLine(ExtraFunctions.getUnixTime());
 
