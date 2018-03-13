@@ -5,6 +5,8 @@ using System.Text;
 using ProtoBuf;
 using transit_realtime;
 using System.Collections.Generic;
+using System.IO.Ports;
+using System.Threading;
 
 namespace transit_test
 {
@@ -13,11 +15,11 @@ namespace transit_test
         static void Main(string[] args)
         {
             //set urls for RTD data
-            String vehiclePositionUrl = "http://www.rtd-denver.com/google_sync/VehiclePosition.pb";
+            //String vehiclePositionUrl = "http://www.rtd-denver.com/google_sync/VehiclePosition.pb";
             String tripUrl = "http://www.rtd-denver.com/google_sync/TripUpdate.pb";
             //get vehicle positions data from RTD.
 
-            FeedMessage vehiclePositionFeed = getData(vehiclePositionUrl);
+            //FeedMessage vehiclePositionFeed = getData(vehiclePositionUrl);
             FeedMessage tripFeed = getData(tripUrl);
 
             Stop stop_inst = new Stop();
@@ -30,10 +32,15 @@ namespace transit_test
             //ExtraFunctions.VehiclePosition_ByStop(vehiclePositionFeed, "22730");
             String stopNumber = "12850";
             String all = "all";
-            List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
-            ExtraFunctions.PrintTrips_ByStop(tripsForStop, stopNumber);
-            Console.WriteLine(ExtraFunctions.getUnixTime());
-
+            //List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
+            //ExtraFunctions.PrintTrips_ByStop(tripsForStop, all);
+            //Console.WriteLine(ExtraFunctions.getUnixTime());
+            String data = "This string also came from C#";
+            SerialPort sp = new SerialPort("COM7", 9600, Parity.None, 8, StopBits.One);
+            sp.Open();
+            sp.Write(data);
+            Console.WriteLine("Data Sent!");
+            sp.Close();
 
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
