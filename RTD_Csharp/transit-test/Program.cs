@@ -32,6 +32,7 @@ namespace transit_test
             //ExtraFunctions.VehiclePosition_ByStop(vehiclePositionFeed, "22730");
             String stopNumber = "12850";
             String all = "all";
+
             //List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
             //ExtraFunctions.PrintTrips_ByStop(tripsForStop, all);
             //Console.WriteLine(ExtraFunctions.getUnixTime());
@@ -41,6 +42,13 @@ namespace transit_test
             sp.Write(data);
             Console.WriteLine("Data Sent!");
             sp.Close();
+
+            List<FeedEntity> tripsForStop = ExtraFunctions.StoreTrip_ByStop(tripFeed, stopNumber);
+            
+            TimeFunctions.GetAllTimes(tripsForStop,stopNumber);
+            ExtraFunctions.PrintTrips_ByStop(tripsForStop, stopNumber);
+            Console.WriteLine(ExtraFunctions.getUnixTime());
+
 
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
